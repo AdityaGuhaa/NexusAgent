@@ -4,6 +4,10 @@
 
 <img width="960" height="540" alt="Screenshot from 2026-05-15 00-43-57" src="https://github.com/user-attachments/assets/ceeb7663-7bd9-45bf-b7bc-359e385056b6" />
 
+<img width="960" height="540" alt="Screenshot from 2026-05-15 01-20-23 - Edited" src="https://github.com/user-attachments/assets/0253ba75-4e24-4287-ba1d-7eab52dc6a50" />
+
+<img width="960" height="540" alt="Screenshot from 2026-05-15 01-20-35 - Edited" src="https://github.com/user-attachments/assets/c3d0e53a-5379-4639-9df2-60db65a1285f" />
+
 ---
 
 ## What is NexusAgent?
