@@ -1,14 +1,14 @@
 # ⬡ NexusAgent
 
-> A local-first agentic AI assistant with real-time web search, tool calling, and a clean Perplexity-style UI — powered by llama.cpp and your own hardware.
+> A local-first agentic AI assistant with real-time web search, tool calling, and a clean Perplexity-style UI powered by llama.cpp and your own hardware.
 
-![NexusAgent UI](docs/demo.png)
+<img width="960" height="540" alt="Screenshot from 2026-05-15 00-43-57" src="https://github.com/user-attachments/assets/ceeb7663-7bd9-45bf-b7bc-359e385056b6" />
 
 ---
 
 ## What is NexusAgent?
 
-NexusAgent is a fully local AI assistant that can search the web, reason over results, and give you accurate, cited, up-to-date answers — all running on your own machine with no cloud inference dependency.
+NexusAgent is a fully local AI assistant that can search the web, reason over results, and give you accurate, cited, up-to-date answers, all running on your own machine with no cloud inference dependency.
 
 Most local LLM setups give you a chatbot that answers from training data alone. NexusAgent goes further — it implements a **ReAct agentic loop** where the model can decide to search the web, read the results, reason over them, and search again if needed before giving a final answer. Every source is cited inline.
 
