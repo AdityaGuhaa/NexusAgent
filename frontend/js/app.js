@@ -1,60 +1,69 @@
 // ── Conversation history ──
-
 let conversationHistory = [];
 let isProcessing = false;
 
 
 // ── Main send function ──
-
 async function handleSend() {
-    if (isProcessing) return;
+    if (isProcessing) {
+        console.log('[NexusAgent] Blocked: still processing previous request');
+        return;
+    }
 
     const input = document.getElementById('userInput');
     const text = input.value.trim();
 
     if (!text) return;
 
-    // Clear input
+    // Lock FIRST — before anything else
+    isProcessing = true;
+    setSendEnabled(false);
+    input.disabled = true;
+
     input.value = '';
     input.style.height = 'auto';
 
-    // Add to history and UI
-    conversationHistory.push({ role: 'user', content: text });
+    // 1. Append user message to DOM
     appendUserMessage(text);
 
-    // Lock input
-    isProcessing = true;
-    setSendEnabled(false);
+    // 2. Add to conversation history
+    conversationHistory.push({ role: 'user', content: text });
 
-    // Create assistant bubble with typing indicator
+    // 3. Create assistant bubble immediately after user message
     const bubble = createAssistantMessage();
+    const bubbleId = bubble.id;
+    console.log('[NexusAgent] Sending request, bubble:', bubbleId);
     showTypingIndicator(bubble);
 
     try {
         const response = await sendMessage(conversationHistory);
-        await processStream(response, bubble);
+        // Re-fetch bubble from DOM by ID to ensure we have the right reference
+        const targetBubble = document.getElementById(bubbleId);
+        console.log('[NexusAgent] Response received, rendering to:', bubbleId, 'found:', !!targetBubble);
+        await processStream(response, targetBubble || bubble);
 
-        // Extract final text from bubble for history
-        const assistantText = bubble.innerText || bubble.textContent || '';
+        const finalBubble = document.getElementById(bubbleId) || bubble;
+        const assistantText = finalBubble.innerText || finalBubble.textContent || '';
         conversationHistory.push({
             role: 'assistant',
             content: assistantText
         });
 
     } catch (error) {
-        bubble.innerHTML = `<span style="color: var(--error);">Error: ${escapeHTML(error.message)}</span>`;
+        const errorBubble = document.getElementById(bubbleId) || bubble;
+        errorBubble.innerHTML = `<span style="color: var(--error);">Error: ${escapeHTML(error.message)}</span>`;
         console.error('[NexusAgent]', error);
     }
 
-    // Unlock input
+    // Unlock
     isProcessing = false;
     setSendEnabled(true);
+    input.disabled = false;
     input.focus();
 }
 
 
 // ── Auto resize textarea ──
-
 function initTextarea() {
     const input = document.getElementById('userInput');
 
@@ -73,7 +82,6 @@ function initTextarea() {
 
 
 // ── Suggestion buttons ──
-
 function initSuggestions() {
     document.querySelectorAll('.suggestion-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -88,7 +96,6 @@ function initSuggestions() {
 
 
 // ── New chat button ──
-
 function initNewChat() {
     document.getElementById('newChatBtn').addEventListener('click', () => {
         conversationHistory = [];
@@ -114,25 +121,21 @@ function initNewChat() {
 
 
 // ── Send button ──
-
 function initSendButton() {
     document.getElementById('sendBtn').addEventListener('click', handleSend);
 }
 
 
 // ── Health check ──
-
 async function runHealthCheck() {
     const online = await checkHealth();
     setServerStatus(online);
 
-    // Recheck every 30 seconds
     setTimeout(runHealthCheck, 30000);
 }
 
 
 // ── Init ──
-
 document.addEventListener('DOMContentLoaded', () => {
     initTextarea();
     initSuggestions();

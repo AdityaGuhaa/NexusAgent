@@ -14,7 +14,7 @@ TOOLS = [
                     "num_results": {
                         "type": "integer",
                         "description": "Number of results to return. Default is 5.",
-                        "default": 5
+                        "default": 8
                     }
                 },
                 "required": ["query"]

@@ -63,7 +63,7 @@ async def search_duckduckgo(query: str, num_results: int = 5) -> list[dict]:
     return results[:num_results]
 
 
-async def web_search(query: str, num_results: int = 5) -> list[dict]:
+async def web_search(query: str, num_results: int = 8) -> list[dict]:
     if SERPER_API_KEY:
         try:
             return await search_serper(query, num_results)

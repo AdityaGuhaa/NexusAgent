@@ -63,8 +63,6 @@ function hideWelcome() {
 }
 
 
-// ── Append user message ──
-
 function appendUserMessage(text) {
     hideWelcome();
 
@@ -72,7 +70,6 @@ function appendUserMessage(text) {
 
     const div = document.createElement('div');
     div.className = 'message user';
-
     div.innerHTML = `
         <div class="message-bubble">
             ${escapeHTML(text)}
@@ -81,10 +78,10 @@ function appendUserMessage(text) {
 
     messages.appendChild(div);
     scrollToBottom();
+
+    return div;
 }
 
-
-// ── Create assistant message container ──
 
 function createAssistantMessage() {
     hideWelcome();
@@ -93,14 +90,20 @@ function createAssistantMessage() {
 
     const div = document.createElement('div');
     div.className = 'message assistant';
-    div.innerHTML = `<div class="message-bubble" id="activeBubble"></div>`;
 
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    const uniqueId = 'bubble-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+    bubble.id = uniqueId;
+    bubble.dataset.messageIndex = messages.querySelectorAll('.message').length;
+
+    div.appendChild(bubble);
     messages.appendChild(div);
+
     scrollToBottom();
-
-    return document.getElementById('activeBubble');
+    console.log('[NexusAgent] Created bubble:', uniqueId);
+    return bubble;
 }
-
 
 // ── Show typing indicator ──
 
@@ -153,8 +156,16 @@ function markToolDone(indicatorId) {
 // ── Render final text into bubble ──
 
 function renderFinalResponse(bubble, text) {
+    console.log('[NexusAgent] Rendering into bubble:', bubble.id, 'text length:', (text || '').length);
+    
     // Remove all tool indicators
     bubble.querySelectorAll('.tool-indicator').forEach(el => el.remove());
+
+    if (!text || text.trim() === '') {
+        bubble.innerHTML = '<p><em>No response generated.</em></p>';
+        scrollToBottom();
+        return;
+    }
 
     const sources = extractSources(text);
 
