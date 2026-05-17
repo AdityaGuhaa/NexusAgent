@@ -228,7 +228,7 @@ Pull requests are welcome. For major changes, open an issue first to discuss wha
 
 ## License
 
-MIT
+Licensed under the [Apache License, Version 2.0](LICENSE). See the [NOTICE](NOTICE) file for attribution requirements.
 
 ---
 
